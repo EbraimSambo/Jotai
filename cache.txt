@@ -1,0 +1,38 @@
+ .then((res) => {
+                setResponse({
+                    keyApi: res.data.apiKey,
+                    expiration: Number(res.data.expiration)
+                })
+                setSuccess(true)
+            })
+            .catch((error) => {
+                console.log(error)
+                if (error?.request?.status == 0) {
+                    console.log("aqui 1")
+
+                    return setErrorMessage({
+                        error: true,
+                        message: "Alguma coisa ocorreu com a sua conexão, tente maís tarde!"
+                    })
+                }
+
+                if (error?.code == "ERR_BAD_RESPONSE") {
+                    console.log("aqui 2")
+
+                    return setErrorMessage({
+                        error: true,
+                        message: "Não conseguismos buscar a sua chave de api, tente maís tarde!"
+                    })
+                }
+
+                if (error?.code == "ECONNABORTED") {
+                    console.log("aqui 3")
+                    return setErrorMessage({
+                        error: true,
+                        message: "Alguma coisa ocorreu com a sua conexão, tente maís tarde!"
+                    })
+                }
+
+            }).finally(() => {
+                startTransition(false)
+            })
